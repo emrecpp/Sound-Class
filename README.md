@@ -1,2 +1,3 @@
 # Sound-Class
-Sound Class for Windows
+
+# C++ Sound Class for Windows 
