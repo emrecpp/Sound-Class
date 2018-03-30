@@ -7,8 +7,6 @@
 #pragma comment(lib, "user32.lib")
 
 #define _CRT_SECURE_NO_WARNINGS
-static int *sesptr = new int(0);
-static bool *muteptr = new bool(false);
 #define GET_MUTE 0
 #define GET_VOLUME 1
 #define GET_VOLUMEMUTE 2
@@ -16,6 +14,9 @@ static bool *muteptr = new bool(false);
 #define SET_MUTE_AUTO 4
 #define SET_VOLUME 5
 #define SET_MUTE_WANT 6
+
+static int *sesptr = new int(0);//volume
+static bool *muteptr = new bool(false);//mute
 namespace eSOUND
 {
 	inline void Center(byte type)
@@ -44,7 +45,7 @@ namespace eSOUND
 			{
 				float currentVolume = 0;
 				endpointVolume->GetMasterVolumeLevelScalar(&currentVolume);
-				int ses = (currentVolume + 0.00000039) * 100;//0.259999961
+				int ses = (currentVolume + 0.00000039) * 100;
 				BOOL mute;
 				endpointVolume->GetMute(&mute);
 				endpointVolume->Release();
@@ -76,9 +77,9 @@ namespace eSOUND
 			}
 			if (type == SET_VOLUME)//5
 			{
-				float newVolume = static_cast<float>(*sesptr) / 100;//1 ile 0 arasinda tutmak icin 100'e bolduk
+				float newVolume = static_cast<float>(*sesptr) / 100;//Between 1 and 0
 				endpointVolume->SetMasterVolumeLevelScalar(newVolume, NULL);
-				endpointVolume->SetMute(false, 0);//eger volume yapilacaksa otomatik muteden cikarilmali
+				endpointVolume->SetMute(false, 0);//Disabled Mute
 				endpointVolume->Release();
 				device->Release();
 				enumerator->Release();
